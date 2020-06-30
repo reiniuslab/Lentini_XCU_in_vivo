@@ -1,3 +1,5 @@
+#!/bin/bash
+
 zUMIs/zUMIs-master.sh -y mESC_NEW.yaml
 zUMIs/zUMIs-master.sh -y mESC_clone5_diff.yaml
 
