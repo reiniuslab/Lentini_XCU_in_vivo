@@ -7,7 +7,12 @@ tpm.melt.ss3[expressed == T & day != 0 & x.status %in% c("XaXa","XaXi","XiXa"), 
 tpm.melt.fcavg.ss3 <- tpm.melt.ss3[,mean(fc,na.rm=T), by=c("l1","gene","chrx","x.status")]
 
 # p values
+## ChrX vs Autosomes
 tpm.melt.fcavg.ss3[!gene %in% x.escapees$gene & x.status %in% c("XaXi","XiXa"), wilcox.test(V1~chrx)$p.value, by=c("l1","x.status")]
+
+## Xa/Xi vs XaXa
+tpm.melt.ss3[expressed == T & day != 0 & x.status %in% c("XaXa","XaXi","XiXa") & chrx == T, mean(value,na.rm=T), by=c("l1","gene","x.status")][order(gene)][l1 == "c57", wilcox.test(V1[x.status == "XaXi"],V1[x.status == "XaXa"], paired = T)$p.value]
+tpm.melt.ss3[expressed == T & day != 0 & x.status %in% c("XaXa","XaXi","XiXa") & chrx == T, mean(value,na.rm=T), by=c("l1","gene","x.status")][order(gene)][l1 == "cast", wilcox.test(V1[x.status == "XiXa"],V1[x.status == "XaXa"], paired = T)$p.value]
 
 # plot
 library(ggplot2)
