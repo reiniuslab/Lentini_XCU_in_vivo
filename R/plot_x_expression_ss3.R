@@ -6,6 +6,11 @@ tpm.melt.avg.ss3 <- tpm.melt.ss3[expressed == T & chr != "chrY", base::mean(valu
 tpm.melt.all.avg.ss3 <- tpm.melt.all.ss3[expressed == T & chr != "chrY", mean(value,na.rm=T),by=c("sample_id","sex","day","chrx","x.status")]
 umi.melt.all.avg.ss3 <- relumi.melt.all.ss3[expressed == T & chr != "chrY", mean(value,na.rm=T),by=c("sample_id","sex","day","chrx","x.status")]
 
+# P-values
+tpm.melt.all.avg.ss3[x.status %in% c("XaXa","XaXi","XiXa") & chrx == T, pairwise.wilcox.test(V1, paste(sex, x.status), "fdr")[[3]]]
+umi.melt.all.avg.ss3[x.status %in% c("XaXa","XaXi","XiXa") & day == 0 & chrx == T, pairwise.wilcox.test(V1, paste(sex, x.status), "fdr")[[3]]]
+
+## Plot
 library(ggplot2)
 library(cowplot)
 library(ggbeeswarm)
