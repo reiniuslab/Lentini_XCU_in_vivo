@@ -1,11 +1,11 @@
 library(data.table)
 library(magrittr)
 library(biomaRt)
-library(loomR)
 
 ##
 
 loom2matrix <- function(x){
+  require(loomR)
   lfile <- connect(x)
   out <- t(lfile$matrix[,])
   colnames(out) <- lfile$col.attrs$CellID[]
