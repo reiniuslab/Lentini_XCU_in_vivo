@@ -35,7 +35,7 @@ p.exprs.allele.tpm.ss3 <-
     facet_grid(~sex+x.status, scales = "free_x", space = "free_x") +
     labs(x="Day", y="Expression (TPM)") +
     coord_cartesian(ylim=c(0,100)) +
-    scale_color_brewer(palette="Paired", name=NULL, labels=c("Autosome:Pat","Autosome:Mat","ChrX:Pat","ChrX:Mat")) +
+    scale_color_brewer(palette="Paired", name=NULL, labels=c("Autosome:Mat","Autosome:Pat","ChrX:Mat","ChrX:Pat")) +
     theme_cowplot() +
     theme(legend.position = "top", strip.background = element_blank())
 
