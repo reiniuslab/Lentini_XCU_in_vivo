@@ -30,12 +30,12 @@ ggsave2("plots/ss3_maternal_x_fraction.pdf",width = 3,height = 3,p.xfrac.ss3)
 
 # tpm allele over x status
 p.exprs.allele.tpm.ss3 <-
-  ggplot(tpm.melt.avg.ss3[!is.na(x.status) & x.status %in% c("XaXi","XiXa","XaXa")], aes(y=V1, x=factor(day), col=paste(chrx, l1))) +
+  ggplot(tpm.melt.avg.ss3[!is.na(x.status) & x.status %in% c("XaXi","XiXa","XaXa")], aes(y=V1, x=factor(day), col=paste(chrx, l1=="c57"))) +
     geom_boxplot(outlier.alpha = 0.1, outlier.stroke = NA) +
     facet_grid(~sex+x.status, scales = "free_x", space = "free_x") +
     labs(x="Day", y="Expression (TPM)") +
     coord_cartesian(ylim=c(0,100)) +
-    scale_color_brewer(palette="Paired", name=NULL, labels=c("Autosome:Mat","Autosome:Pat","ChrX:Mat","ChrX:Pat")) +
+    scale_color_brewer(palette="Paired", name=NULL, labels=c("Autosome:Pat","Autosome:Mat","ChrX:Pat","ChrX:Mat")) +
     theme_cowplot() +
     theme(legend.position = "top", strip.background = element_blank())
 
