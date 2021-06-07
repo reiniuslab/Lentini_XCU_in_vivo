@@ -1,0 +1,50 @@
+project: mESC_diff_clone5
+sequence_files:
+  file1:
+    name: /huxley.hdd/projects/mESC_diff_SS3/fastq/clone5diff/Undetermined_S0_R1_001.fastq.gz
+    base_definition:
+      - cDNA(23-76)
+      - UMI(12-19)
+    find_pattern: ATTGCGCAATG
+  file2:  
+    name: /huxley.hdd/projects/mESC_diff_SS3/fastq/clone5diff/Undetermined_S0_I1_001.fastq.gz
+    base_definition:
+      - BC(1-10)
+reference:
+  STAR_index: /samus.ssd/genome_index/star/GRCm38.p6.mgp.CAST_EiJ_N-masked.noGTF/
+  GTF_file: /huxley.hdd/reference_genomes/mouse/GRCm38.mgp/Mus_musculus.GRCm38.97.chr.gtf
+  additional_STAR_params: '--limitSjdbInsertNsj 2000000 --clip3pAdapterSeq CTGTCTCTTATACACATCT --quantMode TranscriptomeSAM'
+out_dir: /huxley.hdd/projects/smartseq3/results
+num_threads: 100
+mem_limit: 100
+filter_cutoffs:
+  BC_filter:
+    num_bases: 3
+    phred: 20
+  UMI_filter:
+    num_bases: 3
+    phred: 20
+barcodes:
+  barcode_num: ~
+  barcode_file: /huxley.hdd/projects/smartseq3/expected_barcodes_UDI_SE.txt
+  automatic: no
+  BarcodeBinning: 1
+  nReadsperCell: 100
+  demultiplex: yes
+counting_opts:
+  introns: yes
+  downsampling: '50000,100000,250000,500000,750000,1000000'
+  strand: 0
+  Ham_Dist: 1
+  write_ham: yes
+  velocyto: no
+  primaryHit: yes
+  twoPass: no
+make_stats: yes
+which_Stage: Filtering
+samtools_exec: samtools
+pigz_exec: pigz
+STAR_exec: STAR
+Rscript_exec: Rscript
+zUMIs_directory: /huxley.hdd/projects/smartseq3/zUMIs
+read_layout: SE
