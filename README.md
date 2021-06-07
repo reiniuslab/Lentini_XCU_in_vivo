@@ -18,6 +18,7 @@ Mammalian X-chromosome dosage balance is regulated by X-chromosome inactivation 
 
 | Package | Version | Source |
 | :------ | :------ | :----- |
+| `ArchR` | 1.0.1 | Github (GreenleafLab/ArchR@968e442) |
 | `Biobase` | 2.44.0 | Bioconductor |
 | `BiocGenerics` | 0.30.0 | Bioconductor |
 | `BiocParallel` | 1.18.1 | Bioconductor |
