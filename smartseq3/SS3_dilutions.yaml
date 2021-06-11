@@ -1,0 +1,55 @@
+project: dilutions
+sequence_files:
+  file1:
+    name: /Lentini_XCU_in_vivo/smartseq3/fastq_dilutions/merged/Merged_R1.fastq.gz
+    base_definition:
+      - cDNA(23-72)
+      - UMI(12-19)
+    find_pattern: ATTGCGCAATG
+  file2:  
+    name: /Lentini_XCU_in_vivo/smartseq3/fastq_dilutions/merged/Merged_I1.fastq.gz
+    base_definition:
+      - BC(1-10)
+  file3:  
+    name: /Lentini_XCU_in_vivo/smartseq3/fastq_dilutions/merged/Merged_I2.fastq.gz
+    base_definition:
+      - BC(1-10)
+reference:
+  STAR_index: star/GRCm38.p6.mgp.CAST_EiJ_N-masked.noGTF/
+  GTF_file: GRCm38.mgp/Mus_musculus.GRCm38.97.chr.gtf
+  additional_STAR_params: '--limitSjdbInsertNsj 2000000 --clip3pAdapterSeq CTGTCTCTTATACACATCT'
+out_dir: /Lentini_XCU_in_vivo/smartseq3/results_dilutions/
+num_threads: 6
+mem_limit: 100
+filter_cutoffs:
+  BC_filter:
+    num_bases: 3
+    phred: 20
+  UMI_filter:
+    num_bases: 3
+    phred: 20
+barcodes:
+  barcode_num: ~
+  barcode_file: /Lentini_XCU_in_vivo/smartseq3/expected_barcodes_dilutions.txt 
+  automatic: no
+  BarcodeBinning: 1
+  nReadsperCell: 100
+  demultiplex: no
+counting_opts:
+  introns: yes
+  downsampling: '50000,100000,250000,500000,750000,1000000'
+  strand: 0
+  Ham_Dist: 1
+  write_ham: yes
+  velocyto: no
+  primaryHit: yes
+  twoPass: no
+make_stats: yes
+which_Stage: Counting
+samtools_exec: samtools
+pigz_exec: pigz
+STAR_exec: STAR
+zUMIs_directory: zUMIs
+Rscript_exec: Rscript
+read_layout: SE
+
