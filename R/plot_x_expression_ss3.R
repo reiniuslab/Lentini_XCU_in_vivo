@@ -1,16 +1,14 @@
 suppressMessages(source("R/load_data_smartseq3.R"))
 
+# average data per chromosome
+tpm.melt.avg.chr.ss3 <- tpm.melt.ss3[expressed == T & chr != "chrY", base::mean(value,na.rm=T, trim = 0.2),by=c("sample_id","sex","l1","day","chr","x.status")]
+
 # average data
 tpm.melt.avg.ss3 <- tpm.melt.ss3[expressed == T & chr != "chrY", base::mean(value,na.rm=T, trim = 0.2),by=c("sample_id","sex","l1","day","chrx","x.status")]
 
 tpm.melt.all.avg.ss3 <- tpm.melt.all.ss3[expressed == T & chr != "chrY", mean(value,na.rm=T),by=c("sample_id","sex","day","chrx","x.status")]
-umi.melt.all.avg.ss3 <- relumi.melt.all.ss3[expressed == T & chr != "chrY", mean(value,na.rm=T),by=c("sample_id","sex","day","chrx","x.status")]
 
-# P-values
-tpm.melt.all.avg.ss3[x.status %in% c("XaXa","XaXi","XiXa") & chrx == T, pairwise.wilcox.test(V1, paste(sex, x.status), "fdr")[[3]]]
-umi.melt.all.avg.ss3[x.status %in% c("XaXa","XaXi","XiXa") & day == 0 & chrx == T, pairwise.wilcox.test(V1, paste(sex, x.status), "fdr")[[3]]]
-
-## Plot
+## plot
 library(ggplot2)
 library(cowplot)
 library(ggbeeswarm)
@@ -28,42 +26,79 @@ ggplot(meta.ss3, aes(y=c57.x.frac, x=factor(day))) +
 
 ggsave2("plots/ss3_maternal_x_fraction.pdf",width = 3,height = 3,p.xfrac.ss3)
 
-# tpm allele over x status
-p.exprs.allele.tpm.ss3 <-
-  ggplot(tpm.melt.avg.ss3[!is.na(x.status) & x.status %in% c("XaXi","XiXa","XaXa")], aes(y=V1, x=factor(day), col=paste(chrx, l1=="c57"))) +
-    geom_boxplot(outlier.alpha = 0.1, outlier.stroke = NA) +
-    facet_grid(~sex+x.status, scales = "free_x", space = "free_x") +
-    labs(x="Day", y="Expression (TPM)") +
-    coord_cartesian(ylim=c(0,100)) +
-    scale_color_brewer(palette="Paired", name=NULL, labels=c("Autosome:Pat","Autosome:Mat","ChrX:Pat","ChrX:Mat")) +
-    theme_cowplot() +
-    theme(legend.position = "top", strip.background = element_blank())
+# x status fraction per day
+p.xstate.ss3 <-
+ggplot(meta.ss3[x.status %in% c("XaXi","XiXa","XaXa")], aes(x=factor(day), fill=x.status)) +
+  geom_bar(position="fill") +
+  facet_grid(~sex, scales = "free_x", space = "free_x") +
+  labs(x="Day", y="Fraction") +
+  scale_fill_brewer(palette="Set1", name="XmXp") +
+  theme_cowplot() +
+  theme(strip.background = element_blank())
 
-ggsave2("plots/ss3_x_expression.pdf",width = 6,height = 3,p.exprs.allele.tpm.ss3)
+ggsave2("plots/ss3_xstate_fraction.pdf",width = 3,height = 3,p.xstate.ss3)
+
+# tpm allele per chromosome
+p.exprs.allele.chr.ss3 <- 
+  ggplot(tpm.melt.avg.chr.ss3[!is.na(x.status) & x.status %in% c("XaXi","XiXa","XaXa")], aes(y=V1, x=factor(gsub("chr","",chr),level=c(1:19,"X")), col=l1=="c57" )) +
+    stat_summary(fun.data="median_cl_boot") +
+    facet_grid(sex+x.status~.) +
+    labs(x="Chromosome", y="Expression (TPM)") +
+    coord_cartesian(ylim=c(0,40)) +
+    scale_color_brewer(palette="Set1", name=NULL, labels = c("Paternal", "Maternal") ) +
+    theme_cowplot() +
+    theme(strip.background = element_blank() )
+
+ggsave2("plots/ss3_x_expression_chr.pdf", width = 6, height = 4, p.exprs.allele.chr.ss3)
+
+# tpm global over days
+p.exprs.all.tpm.day.ss3 <-  
+  ggplot(tpm.melt.all.avg.ss3, aes(y=V1, x=factor(day), col=chrx)) +
+    geom_boxplot(outlier.stroke = NA) +
+    facet_grid(~sex, scales = "free_x", space = "free_x") +
+    labs(x="Day", y="ChrX expression (TPM)") +
+    coord_cartesian(ylim=c(0,50)) +
+    scale_color_brewer(palette="Set1", name = NULL, labels = c("Autosomes", "ChrX")) +
+    theme_cowplot() +
+    theme(strip.background = element_blank())
+
+ggsave2("plots/ss3_x_expression_all_tpm_day.pdf",width = 4,height = 3,p.exprs.all.tpm.day.ss3)
 
 # tpm global over x status
-p.exprs.all.tpm.ss3 <-
-  ggplot(tpm.melt.all.avg.ss3[x.status %in% c("XaXa","XaXi","XiXa") & chrx == T], aes(y=V1, x=factor(day), col=chrx)) +
+p.exprs.all.tpm.xstatus.ss3 <-
+  ggplot(tpm.melt.all.avg.ss3[x.status %in% c("XaXa","XaXi","XiXa") & chrx == T], aes(y=V1, x=x.status)) +
     geom_boxplot(outlier.stroke = NA, outlier.alpha = 0.1) +
-    geom_hline(lty=2, col="grey",yintercept = tpm.melt.all.avg.ss3[x.status == "XaXa" & chrx == T, median(V1, na.rm = T), by=day][,median(V1)]) +
+    facet_grid(~sex, scales = "free_x", space = "free_x") +
+    labs(x=NULL, y="Total X expression (TPM)") +
+    coord_cartesian(ylim=c(0,50)) +
+    theme_cowplot() +
+    theme(legend.position = "top", strip.background = element_blank())
+
+ggsave2("plots/ss3_x_expression_all_tpm_xstatus.pdf",width = 3,height = 3,p.exprs.all.tpm.xstatus.ss3)
+
+# xaxa expression per day
+p.xexprs.all.tpm.s3 <-
+  ggplot(tpm.melt.all.avg.ss3[!is.na(x.status) & x.status %in% c("XaXi","XiXa","XaXa") & chrx == T], aes(y=V1, x=factor(day), col="Total")) +
+    stat_summary(fun.data="median_cl_boot", stroke=NA) +
     facet_grid(~sex+x.status, scales = "free_x", space = "free_x") +
+    labs(x=NULL, y="Total X expression (TPM)") +
+    coord_cartesian(ylim=c(0,50)) +
+    theme_cowplot() +
+    theme(strip.background = element_blank())
+
+p.xexprs.tpm.s3 <-
+  ggplot(tpm.melt.avg.chr.ss3[!is.na(x.status) & x.status %in% c("XaXi","XiXa","XaXa") & chr == "chrX"], aes(y=V1, x=factor(day), col=l1=="c57" )) +
+    stat_summary(fun.data="median_cl_boot", stroke=NA) +
+    facet_grid(~sex+x.status, scales="free_x", space="free_x") +
     labs(x="Day", y="Expression (TPM)") +
-    coord_cartesian(ylim=c(0,100)) +
+    coord_cartesian(ylim=c(0,50)) +
+    scale_color_brewer(palette="Paired", name="ChrX", labels = c("Paternal", "Maternal") ) +
     theme_cowplot() +
-    theme(legend.position = "top", strip.background = element_blank())
+    theme(strip.background = element_blank() )
 
-ggsave2("plots/ss3_x_expression_all_tpm.pdf",width = 5,height = 3,p.exprs.all.tpm.ss3)
-
-# umi global over x status
-p.exprs.all.umi.ss3 <-
-  ggplot(umi.melt.all.avg.ss3[x.status %in% c("XaXa","XaXi","XiXa") & day == 0 & chrx == T], aes(y=V1, x=x.status, col=chrx)) +
-    geom_boxplot(outlier.stroke = NA, outlier.alpha = 0.1) +
-    geom_hline(lty=2, col="grey",yintercept = umi.melt.all.avg.ss3[x.status %in% c("XaXa","XaXi","XiXa") & day == 0 & chrx == F, median(V1, na.rm = T)/2]) +
-    facet_grid(~day+sex, scales = "free_x", space = "free_x") +
-    labs(x=NULL, y="Relative UMIs") +
-    coord_cartesian(ylim=c(0,1)) +
-    scale_color_brewer(palette="Set1", name=NULL, labels="ChrX") +
-    theme_cowplot() +
-    theme(legend.position = "top", strip.background = element_blank())
-
-ggsave2("plots/ss3_x_expression_all_umi.pdf",width = 2,height = 3,p.exprs.all.umi.ss3)
+ggsave2("plots/ss3_x_expression_by_day.pdf",width = 6,height = 4,
+  plot_grid(align = "hv", ncol = 1,
+    p.xexprs.all.tpm.s3,
+    p.xexprs.tpm.s3
+  )
+)

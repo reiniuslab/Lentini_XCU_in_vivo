@@ -90,7 +90,7 @@ median_cl_boot <- function(x, conf = 0.95) {
 library(rtracklayer)
 gtf <- import("smartseq3/Mus_musculus.GRCm38.97.chr.gtf.gz")
 gene.anno.ss3 <- unique(with(gtf, data.table(gene_id, gene_name, chrom = as.character(seqnames), start)))
-gene.anno.ss3 %<>% .[chrom %in% c(1:19,"X")]
+gene.anno.ss3 %<>% .[chrom %in% c(1:19,"X","Y")]
 
 # load counts
 counts.ss3.day0 <- list(
@@ -115,6 +115,7 @@ meta.ss3.cl5diff[,x.status := get.x.status(c57.x.frac)]
 meta.ss3.cl5diff[fread("smartseq3/samples_exclude.tsv"),exclude:=exclude,on = "sample_id==sample_id"]
 
 meta.ss3 <- rbindlist(list(meta.ss3.day0,meta.ss3.cl5diff))
+# fwrite(meta.ss3, "smartseq3/metadata_ss3_full.tsv", quote = F, sep = "\t") # export updated metadata
 
 # load RPKM data
 rpkm.all.ss3.day0 <- loom2matrix("smartseq3/results/zUMIs_output/expression/mESC_day0.rpkm.exon.all.loom")
@@ -141,8 +142,8 @@ altratio.ss3.day0 <- read.delim("smartseq3/results/zUMIs_output/allelic/mESC_day
 altratio.ss3.day0.filt <- altratio.ss3.day0[which(apply(altratio.ss3.day0,1,var, na.rm=T)>0),]
 # scale data by allele counts
 tpm.allele.ss3.day0 <- list(
-  "c57" = as.matrix(tpm.all.ss3.day0[row.names(altratio.ss3.day0.filt), colnames(altratio.ss3.day0.filt)] * (1 - altratio.ss3.day0.filt)),
-  "cast" = as.matrix(tpm.all.ss3.day0[row.names(altratio.ss3.day0.filt), colnames(altratio.ss3.day0.filt)] * altratio.ss3.day0.filt)
+  "c57" = as.matrix(tpm.all.ss3.day0[intersect(row.names(altratio.ss3.day0.filt), row.names(tpm.all.ss3.day0)), colnames(altratio.ss3.day0.filt)] * (1 - altratio.ss3.day0.filt)),
+  "cast" = as.matrix(tpm.all.ss3.day0[intersect(row.names(altratio.ss3.day0.filt), row.names(tpm.all.ss3.day0)), colnames(altratio.ss3.day0.filt)] * altratio.ss3.day0.filt)
 )
 tpm.melt.ss3.day0 <- as.data.table(melt(tpm.allele.ss3.day0))
 tpm.melt.ss3.day0 %<>% add.info.ss3(coldata=meta.ss3.day0)
@@ -151,8 +152,8 @@ tpm.melt.ss3.day0 %<>% .[exclude == F]
 altratio.ss3.cl5diff <- read.delim("smartseq3/results/zUMIs_output/allelic/mESC_diff_clone5.fract_CAST_reads.txt", row.names=1)
 altratio.ss3.cl5diff.filt <- altratio.ss3.cl5diff[which(apply(altratio.ss3.cl5diff,1,var, na.rm=T)>0),]
 tpm.allele.ss3.cl5diff <- list(
-  "c57" = as.matrix(tpm.all.ss3.cl5diff[row.names(altratio.ss3.cl5diff.filt), colnames(altratio.ss3.cl5diff.filt)] * (1 - altratio.ss3.cl5diff.filt)),
-  "cast" = as.matrix(tpm.all.ss3.cl5diff[row.names(altratio.ss3.cl5diff.filt), colnames(altratio.ss3.cl5diff.filt)] * altratio.ss3.cl5diff.filt)
+  "c57" = as.matrix(tpm.all.ss3.cl5diff[intersect(row.names(altratio.ss3.cl5diff.filt), row.names(tpm.all.ss3.cl5diff)), colnames(altratio.ss3.cl5diff.filt)] * (1 - altratio.ss3.cl5diff.filt)),
+  "cast" = as.matrix(tpm.all.ss3.cl5diff[intersect(row.names(altratio.ss3.cl5diff.filt), row.names(tpm.all.ss3.cl5diff)), colnames(altratio.ss3.cl5diff.filt)] * altratio.ss3.cl5diff.filt)
 )
 tpm.melt.ss3.cl5diff <- as.data.table(melt(tpm.allele.ss3.cl5diff))
 tpm.melt.ss3.cl5diff %<>% add.info.ss3(coldata=meta.ss3.cl5diff)

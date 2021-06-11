@@ -54,7 +54,7 @@ sce.ss3 <- SingleCellExperiment(
 
 sce.ss3 %<>% calculateQCMetrics()
 # exclude based on 3MAD read depth
-sce.ss3$exclude <- sce.ss3$log10_total_counts < median(sce.ss3$log10_total_counts) - mad(sce.ss3$log10_total_counts)*3
+sce.ss3$exclude <- isOutlier(sce.ss3$total_counts, nmads = 3, type = "lower", log = T)
 ## write exclusion list
 # write.table(colData(sce.ss3)[,c("sample_id","exclude")],"smartseq3/samples_exclude.tsv",quote = F,sep = "\t",row.names = F)
 
@@ -78,6 +78,11 @@ names(hvgs.ss3) <- var.decomp.ss3[var.decomp.ss3$FDR < 0.05,'gene_name']
 p.diffmap.ss3 <- plotDiffusionMap(sce.filt.ss3, colour_by="day", shape_by="sex",rerun=T, run_args = list(feature_set = head(hvgs.ss3,1e3))) + labs(x="DC1",y="DC2")
 
 ggsave2("plots/ss3_diffusionmap.pdf",width = 4, height = 3, p.diffmap.ss3)
+
+# UMAP day 1
+p.umap.d0.ss3 <- plotUMAP(subset(sce.filt.ss3,,day=="0"), colour_by="day", shape_by="sex",rerun=T, run_args = list(feature_set = head(hvgs.ss3,1e3))) + labs(x="UMAP1",y="UMAP2")
+
+ggsave2("plots/ss3_umap_d0.pdf", width = 4, height = 3, p.umap.d0.ss3)
 
 ## differential expression
 library(MAST)

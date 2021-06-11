@@ -86,3 +86,22 @@ dev.off()
 
 ## write clusters
 # write.table(colData(sce.blast.filt)[,c("cluster","cluster2")], "data/blast_subcluster.tsv", quote = F, sep = "\t", col.names = NA)
+
+## plot X expression by subcluster
+tpm.melt.blast.avg %<>% .[as.data.table(colData(sce.blast.filt)[,c("cluster","cluster2")]), on="sample == cluster"]
+tpm.melt.blast.avg[, label := cluster] %>% .[!is.na(cluster2), label := cluster2]
+
+p.x.expr.blast.sub <- 
+  ggplot(tpm.melt.blast.avg[label %in% c(2,5,6) & lineage == "lateblast"],aes(y=V1,x=paste(label,sex),x2=factor(l1,levels=c("cast","c57")),col=paste(chrx, tolower(maternal) == l1))) +
+  geom_boxplot(outlier.alpha = 0.1, outlier.stroke = NA) +
+  expand_limits(y=0) +
+  ylab("Expression (TPM)") +
+  coord_flip(ylim=c(0,150)) +
+  facet_wrap(~lineage) +
+  scale_color_brewer(name = "C57xCAST:",labels = c("Autosome:Paternal","Autosome:Maternal","chrX:Paternal","chrX:Maternal"), palette = "Paired") +
+  theme_cowplot() +
+  theme(legend.position = "top", axis.title.y = element_blank(), strip.background = element_blank())
+
+ggsave2("plots/x_expression_boxplot_blast_subcluster.pdf",height = 6, width = 3,
+        p.x.expr.blast.sub
+)

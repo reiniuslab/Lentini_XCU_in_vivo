@@ -64,6 +64,18 @@ res[gene.anno, pos := start_position, on = "rn == mgi_symbol"]
 # plot
 library(ggplot2)
 library(cowplot)
+library(ggbeeswarm)
+p.bulk.xa <- 
+  ggplot(txi.melt[mean_exprs > 1, median(value[chrx == T], na.rm=T) / median(value[chrx == F], na.rm=T), by=c("genotype", "Var2")], aes(x=genotype, y=V1)) +
+    geom_boxplot() +
+    geom_quasirandom(width = 0.1, stroke=NA) +  
+    geom_hline(yintercept = c(1,0.5), lty=c(1,2)) +
+    labs(x="Genotype", y="X:Autosomal ratio") +
+    expand_limits(y=c(0,1.5)) +
+    theme_cowplot()
+
+ggsave2("plots/bulk_xaratio.pdf",p.bulk.xa,width = 2,height = 4)
+
 p.bulk.fc <- 
   ggplot(res[!is.na(chrx) & baseMean >= 100],aes(x=log2FoldChange, y=..density.., fill=chrx, col=chrx)) +
     geom_density(alpha=0.33) +
