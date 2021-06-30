@@ -3,28 +3,59 @@ suppressMessages(source("R/load_data_smartseq3.R"))
 # load escapees
 x.escapees <- fread("x_escapees.tsv")
 
+## calculate fold changes
 tpm.melt.ss3[expressed == T & day != 0 & x.status %in% c("XaXa","XaXi","XiXa"), fc := value / mean(value[x.status == "XaXa"],na.rm=T), by=c("l1","gene")]
-tpm.melt.fcavg.ss3 <- tpm.melt.ss3[,mean(fc,na.rm=T), by=c("l1","gene","chrx","x.status")]
+tpm.melt.fcavg.ss3 <- tpm.melt.ss3[,list(fc = mean(fc,na.rm=T)), by=c("l1","gene","chrx","x.status")]
+
+# tpm.melt.fcavg.ss3[gene.anno.ss3, c("pos", "chrom") := list(start, chrom), on="gene == gene_name"]
+# fwrite(tpm.melt.fcavg.ss3, "data/diffexpr_xaxi_ss3.tsv", quote = F, sep = "\t")
 
 # p values
-## ChrX vs Autosomes
-tpm.melt.fcavg.ss3[!gene %in% x.escapees$gene & x.status %in% c("XaXi","XiXa"), wilcox.test(V1~chrx)$p.value, by=c("l1","x.status")]
+tpm.melt.fcavg.ss3[!gene %in% x.escapees$gene & x.status %in% c("XaXi","XiXa"), wilcox.test(fc~chrx)$p.value, by=c("l1","x.status")]
 
-## Xa/Xi vs XaXa
-tpm.melt.ss3[expressed == T & day != 0 & x.status %in% c("XaXa","XaXi","XiXa") & chrx == T, mean(value,na.rm=T), by=c("l1","gene","x.status")][order(gene)][l1 == "c57", wilcox.test(V1[x.status == "XaXi"],V1[x.status == "XaXa"], paired = T)$p.value]
-tpm.melt.ss3[expressed == T & day != 0 & x.status %in% c("XaXa","XaXi","XiXa") & chrx == T, mean(value,na.rm=T), by=c("l1","gene","x.status")][order(gene)][l1 == "cast", wilcox.test(V1[x.status == "XiXa"],V1[x.status == "XaXa"], paired = T)$p.value]
+## calculate average expression
+tpm.melt.gnavg.ss3 <- tpm.melt.ss3[expressed == T & day != 0 & x.status %in% c("XaXa","XaXi","XiXa"), mean(value, na.rm=T), by=c("gene", "chrx", "x.status", "l1")]
+tpm.cast.gnavg.ss3 <- dcast(tpm.melt.gnavg.ss3, gene+chrx+l1~x.status, value.var = "V1")
 
-# plot
+## plot
 library(ggplot2)
 library(cowplot)
-p.fc.allele.ss3 <-
-  ggplot(tpm.melt.fcavg.ss3[!gene %in% x.escapees$gene & x.status %in% c("XaXi","XiXa")], aes(x=log2(V1),fill=paste(chrx,l1=="c57"),col=paste(chrx,l1=="c57") )) +
-    geom_density(alpha = 0.25) +
-    facet_wrap(~x.status) +
-    labs(y="Density", x="log2 fold change (vs. XaXa)") +
-    coord_cartesian(xlim=c(-3,3)) +
-    scale_color_brewer(palette="Paired", name="XmXp", labels=c("Autosomes:Paternal", "Autosomes:Maternal","ChrX:Paternal","ChrX:Maternal"), aesthetics = c("col","fill")) +
+# scatter
+p.avg.c57 <-
+  ggplot(tpm.cast.gnavg.ss3[l1 == "c57"], aes(x=log2(XaXa), y=log2(XaXi), col=chrx)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0 ) +
+    ggtitle("C57") +
+    coord_cartesian(xlim=c(-2,12), ylim=c(-2,12)) +
+    scale_color_brewer(palette="Set1", name=NULL, labels=c("Autosomes","ChrX") ) +
     theme_cowplot() +
-    theme(legend.position = "top", strip.background = element_blank())
+    theme(aspect.ratio = 1)
 
-ggsave2("plots/ss3_x_foldchange_allele.pdf",width = 4,height = 3,p.fc.allele.ss3)
+p.avg.cast <-
+  ggplot(tpm.cast.gnavg.ss3[l1 == "cast"], aes(x=log2(XaXa), y=log2(XiXa), col=chrx)) +
+    geom_point() +
+    geom_abline(slope = 1, intercept = 0 ) +
+    ggtitle("CAST") +  
+    coord_cartesian(xlim=c(-2,12), ylim=c(-2,12)) +
+    scale_color_brewer(palette="Set1", name=NULL, labels=c("Autosomes","ChrX") ) +
+    theme_cowplot() +
+    theme(aspect.ratio = 1)
+
+ggsave2("plots/ss3_scatter_allele_expression.pdf", width = 8, height = 3,
+  plot_grid(nrow = 1,
+    p.avg.c57, p.avg.cast
+  )
+)
+
+# density
+p.dens.fc <- 
+ggplot(tpm.melt.fcavg.ss3[x.status %in% c("XaXi", "XiXa")], aes(x=log2(fc), col=chrx, fill=chrx )) + 
+  geom_density() + 
+  geom_vline(xintercept = 0) +
+  facet_grid(l1 ~ x.status) +
+  coord_cartesian(xlim=c(-4, 4)) +
+  scale_color_brewer(palette="Set1", aesthetics = c("colour", "fill")) +
+  theme_cowplot() +
+  theme(strip.background = element_blank() )
+
+ggsave2("plots/ss3_scatter_allele_fc.pdf", width = 8, height = 3, p.dens.fc)

@@ -52,8 +52,8 @@ dds %<>%  DESeq(test="LRT", reduced = ~growth+project)
 
 res <- rbindlist(idcol=T,
   list(
-    "XOvXX" = as.data.table(as.data.frame(results(dds, contrast = c("genotype","XO","XX"))),keep.rownames = T),
-    "XYvXX" = as.data.table(as.data.frame(results(dds, contrast = c("genotype","XY","XX"))),keep.rownames = T)
+    "XXvXO" = as.data.table(as.data.frame(results(dds, contrast = c("genotype","XX","XO"))),keep.rownames = T),
+    "XXvXY" = as.data.table(as.data.frame(results(dds, contrast = c("genotype","XX","XY"))),keep.rownames = T)
   )
 )
 
@@ -79,7 +79,7 @@ ggsave2("plots/bulk_xaratio.pdf",p.bulk.xa,width = 2,height = 4)
 p.bulk.fc <- 
   ggplot(res[!is.na(chrx) & baseMean >= 100],aes(x=log2FoldChange, y=..density.., fill=chrx, col=chrx)) +
     geom_density(alpha=0.33) +
-    geom_vline(data=res[chrx==F & baseMean > 100,density.max(log2FoldChange, na.rm=T),by=.id], col="grey", lty=2, aes(xintercept=V1-1)) +
+    geom_vline(data=res[chrx==F & baseMean > 100,density.max(log2FoldChange, na.rm=T),by=.id], col="grey", lty=2, aes(xintercept=V1+1)) +
     facet_grid(~.id) +
     labs(y="Density", x="log2 fold change") +
     coord_cartesian(xlim=c(-3,3)) +
