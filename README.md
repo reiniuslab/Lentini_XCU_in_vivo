@@ -1,9 +1,14 @@
 # X-chromosome upregulation is dynamically linked to the X-inactivation state
-*Antonio Lentini, Christos Coucoravas, Nathanael Andrews, Martin Enge, Qiaolin Deng and Björn Reinius*
+*Antonio Lentini<sup>1</sup>, Huaitao Cheng<sup>2</sup>, JC Noble<sup>1</sup>, Natali Papanicolaou<sup>1</sup>, Christos Coucoravas<sup>1</sup>, Nathanael Andrews<sup>2</sup>, Qiaolin Deng<sup>3</sup>, Martin Enge<sup>2</sup> and Björn Reinius<sup>1</sup>*
+
+<sup>1</sup>Department of Medical Biochemistry and Biophysics, Karolinska Institutet, Stockholm, Sweden.
+<sup>2</sup>Department of Oncology and Pathology, Karolinska Institutet, Stockholm, Sweden.
+<sup>2</sup>Department of Physiology and Pharmacology, Karolinska Institutet, Stockholm, Sweden.
+##
 
 This repository contains scripts and additional data needed to reproduce findings described in https://www.biorxiv.org/content/10.1101/2020.07.06.189787v2.
 
-Raw and processed Smart-seq3 data is available through ArrayExpress [LINK]().
+Raw and processed data is available through ArrayExpress: [[Smart-seq3]](), [[Joint Smart-seq3+scATAC]]() and [[Allelic dilution series]]().
 
 ``x_escapees.tsv`` is compiled from ([1](https://dx.doi.org/10.1038/ng.3678), [2](https://dx.doi.org/10.1101/gr.103200.109), [3](https://dx.doi.org/10.1038/nsmb.3365), [4](https://dx.doi.org/10.1186/1471-2164-11-614))
 
