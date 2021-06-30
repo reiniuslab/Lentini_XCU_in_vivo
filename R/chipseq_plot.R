@@ -21,7 +21,7 @@ multiOverlap <- function(x){
 # Peak numbers
 library(rtracklayer)
 #fls.chip <- list.files("peaks/consensus", ".broadPeak$", full.names = T)
-fls.chip <- list.files("Zylicz/peaks/filtered", ".broadPeak$", full.names = T)
+fls.chip <- list.files("ChIPseq/peaks/filtered", ".broadPeak$", full.names = T)
 
 ls.chip <- lapply(fls.chip, import)
 names(ls.chip) <- gsub("_peaks_.*", "", basename(fls.chip))
@@ -45,7 +45,7 @@ dat.ol[, c("mod", "allele") := tstrsplit(Var2, "_")]
 dat.ol[, time := c("0h", "12h", "24h", "4h", "8h")[Var1] ]
 
 # TSS enrichment
-fls.chip.tssenirch <- list.files("Zylicz/deeptools", "TSS_enrichment.mat.gz$", full.names = T)
+fls.chip.tssenirch <- list.files("ChIPseq/deeptools", "TSS_enrichment.mat.gz$", full.names = T)
 ls.tssenrich.avg <- lapply(fls.chip.tssenirch, function(x){average.deeptools(fread(x, skip=1))})
 names(ls.tssenrich.avg) <- gsub("\\..*","",basename(fls.chip.tssenirch))
 
@@ -55,7 +55,7 @@ dat.tssenrich[, c("mod", "time", "allele", "target", "type") := tstrsplit(L1, "_
 dat.tssenrich[, rel := value / value[mod == "Input"], by=c("pos", "allele", "time")]
 
 # Enhancer enrichment
-fls.chip.enhenirch <- list.files("Zylicz/deeptools", "Enhancer_enrichment.mat.gz$", full.names = T)
+fls.chip.enhenirch <- list.files("ChIPseq/deeptools", "Enhancer_enrichment.mat.gz$", full.names = T)
 ls.enhenrich.avg <- lapply(fls.chip.enhenirch, function(x){average.deeptools(fread(x, skip=1))})
 names(ls.enhenrich.avg) <- gsub("\\..*","",basename(fls.chip.enhenirch))
 
