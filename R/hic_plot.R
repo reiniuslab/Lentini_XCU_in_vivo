@@ -3,7 +3,7 @@ library(data.table)
 # D0_G1_1mb_chrX.txt
 # G1 = 129, G2 = CAST
 ## load Hi-C contacts
-fls.hic <- list.files("Froberg/dump", full.names = T)
+fls.hic <- list.files("HiC/dump", full.names = T)
 ls.hic <- lapply(fls.hic, fread)
 names(ls.hic) <- gsub("\\..*", "", basename(fls.hic))
 dat.hic <- rbindlist(ls.hic, idcol = T)
@@ -16,7 +16,7 @@ dat.hic[, avgsignal := sum(value, na.rm=T)/1e6, by=c("day", "res", "chrom", "all
 dat.hic[, normsignal := value/avgsignal, by = c("name", "allele", "chrom", "res")]
 
 ## load pearson correlations
-fls.pear <- list.files("Froberg/pearsons", full.names = T)
+fls.pear <- list.files("HiC/pearsons", full.names = T)
 ls.pear <- lapply(fls.pear, function(x) as.data.table(melt(as.matrix(fread(x)))) )
 names(ls.pear) <- gsub("\\..*", "", basename(fls.pear))
 dat.pear <- rbindlist(ls.pear, idcol = T)
@@ -26,7 +26,7 @@ dat.pear[, day := as.numeric(gsub("^D","",name))]
 dat.pear[, y := as.numeric(gsub("V","",y,fixed = T))] # fix positions
 
 ## load eigenvectors
-fls.eigen <- list.files("Froberg/eigen", full.names = T)
+fls.eigen <- list.files("HiC/eigen", full.names = T)
 ls.eigen <- lapply(fls.eigen, fread)
 names(ls.eigen) <- gsub("\\..*", "", basename(fls.eigen))
 dat.eigen <- rbindlist(ls.eigen, idcol = T)
