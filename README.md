@@ -6,7 +6,7 @@
 <sup>2</sup>Department of Physiology and Pharmacology, Karolinska Institutet, Stockholm, Sweden.
 ##
 
-This repository contains scripts and additional data needed to reproduce findings described in https://www.biorxiv.org/content/10.1101/2020.07.06.189787v2.
+This repository contains scripts and additional data needed to reproduce findings described in [PAPER](), [PRE-PRINT](https://www.biorxiv.org/content/10.1101/2020.07.06.189787v2).
 
 Raw and processed data is available through ArrayExpress: [[Smart-seq3]](), [[Joint Smart-seq3+scATAC]]() and [[Allelic dilution series]]().
 
