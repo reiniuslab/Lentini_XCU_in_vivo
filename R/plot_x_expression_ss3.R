@@ -40,14 +40,16 @@ ggsave2("plots/ss3_xstate_fraction.pdf",width = 3,height = 3,p.xstate.ss3)
 
 # tpm allele per chromosome
 p.exprs.allele.chr.ss3 <- 
-  ggplot(tpm.melt.avg.chr.ss3[!is.na(x.status) & x.status %in% c("XaXi","XiXa","XaXa")], aes(y=V1, x=factor(gsub("chr","",chr),level=c(1:19,"X")), col=l1=="c57" )) +
-    stat_summary(fun.data="median_cl_boot") +
-    facet_grid(sex+x.status~.) +
-    labs(x="Chromosome", y="Expression (TPM)") +
-    coord_cartesian(ylim=c(0,40)) +
-    scale_color_brewer(palette="Set1", name=NULL, labels = c("Paternal", "Maternal") ) +
-    theme_cowplot() +
-    theme(strip.background = element_blank() )
+ggplot(tpm.melt.avg.chr.ss3[!is.na(x.status) & x.status %in% c("XaXi","XiXa","XaXa"), median(V1, na.rm=T), by=c("chr", "l1", "sex", "x.status")], aes(y=V1, x=factor(gsub("chr","",chr),level=c(1:19,"X")), col=paste(chr == "chrX",l1=="c57") )) +
+  geom_point(position=position_dodge(0.4)) +
+  geom_linerange(position=position_dodge(0.4), aes(xmin=..x.., xmax=..x.., ymin=5, ymax=..y..)) +
+  geom_hline(data=tpm.melt.avg.chr.ss3[!is.na(x.status) & x.status %in% c("XaXi","XiXa","XaXa") & chr != "chrX", median(V1, na.rm=T), by=c("chr", "l1", "sex", "x.status")][, median(V1), by=c("sex", "x.status")], aes(yintercept=V1)) +
+  facet_grid(sex+x.status~.) +
+  labs(x="Chromosome", y="Expression (TPM)") +
+  coord_cartesian(ylim=c(0,30)) +
+  scale_color_brewer(palette="Paired", name=NULL, labels = c("Autosomes:Paternal", "Autosomes:Maternal", "ChrX:Paternal", "ChrX:Maternal") ) +
+  theme_cowplot() +
+  theme(strip.background = element_blank() )
 
 ggsave2("plots/ss3_x_expression_chr.pdf", width = 6, height = 4, p.exprs.allele.chr.ss3)
 
