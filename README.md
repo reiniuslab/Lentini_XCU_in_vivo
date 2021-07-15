@@ -1,12 +1,12 @@
-# X-chromosome upregulation is dynamically linked to the X-inactivation state
-*Antonio Lentini<sup>1</sup>, Huaitao Cheng<sup>2</sup>, JC Noble<sup>1</sup>, Natali Papanicolaou<sup>1</sup>, Christos Coucoravas<sup>1</sup>, Nathanael Andrews<sup>2</sup>, Qiaolin Deng<sup>3</sup>, Martin Enge<sup>2</sup> and Björn Reinius<sup>1</sup>*
+# Allele-resolved single-cell multi-omics uncovers the dynamics and transcriptional kinetics of X-chromosome upregulation
+*Antonio Lentini<sup>1</sup>, Huaitao Cheng<sup>2</sup>, Joyce Carol Noble<sup>1</sup>, Natali Papanicolaou<sup>1</sup>, Christos Coucoravas<sup>1</sup>, Nathanael Andrews<sup>2</sup>, Qiaolin Deng<sup>3</sup>, Martin Enge<sup>2</sup> and Björn Reinius<sup>1</sup>*
 
 <sup>1</sup>Department of Medical Biochemistry and Biophysics, Karolinska Institutet, Stockholm, Sweden.
 <sup>2</sup>Department of Oncology and Pathology, Karolinska Institutet, Stockholm, Sweden.
 <sup>2</sup>Department of Physiology and Pharmacology, Karolinska Institutet, Stockholm, Sweden.
 ##
 
-This repository contains scripts and additional data needed to reproduce findings described in [PAPER](), [PRE-PRINT](https://www.biorxiv.org/content/10.1101/2020.07.06.189787v2).
+This repository contains scripts and additional data needed to reproduce findings described in [PAPER](), [PRE-PRINT](https://www.biorxiv.org/content/10.1101/2021.07.14.452323v1).
 
 Raw and processed data is available through ArrayExpress: [[Smart-seq3]](), [[Joint Smart-seq3+scATAC]]() and [[Allelic dilution series]]().
 
@@ -15,7 +15,7 @@ Raw and processed data is available through ArrayExpress: [[Smart-seq3]](), [[Jo
 ``xy_homologs.tsv`` is modified from Table1 in ([5](https://dx.doi.org/doi:10.1016/j.cell.2014.09.052)) 
 
 ## Abstract
-Mammalian X-chromosome dosage balance is regulated by X-chromosome inactivation (XCI) and X-chromosome upregulation (XCU), but the dynamics of XCU as well as the interplay between the two mechanisms remain poorly understood. Here, we mapped XCU throughout early mouse embryonic development at cellular and allelic resolution, revealing sex- and lineage-specific dynamics along key events in X-chromosome regulation. Our data show that XCU is linearly proportional to the degree of XCI, indicating that dosage compensation ensues based on mRNA levels rather than number of active X chromosomes. In line with this, we reveal that the two active X chromosomes in female naïve embryonic stem cells are not hyperactive as previously thought. In all lineages, XCU was underlain by increased transcriptional burst frequencies, providing a mechanistic basis in vivo. Together, our results demonstrate unappreciated flexibility of XCU in balancing X-chromosome expression, and we propose a general model for allelic dosage balance, applicable for wider mechanisms of transcriptional regulation.
+X-chromosome inactivation (XCI) and upregulation (XCU) are the major opposing chromosome-wide modes of gene regulation that collectively achieve dosage compensation in mammals, but the regulatory link between the two remains elusive. Here, we use allele-resolved single-cell RNA-seq combined with chromatin accessibility profiling to finely dissect the separate effects of XCI and XCU on RNA levels during mouse development. We uncover that balanced X dosage is flexibly attained through expression tuning by XCU in a sex- and lineage-specific manner along varying degrees of XCI and across developmental and cellular states. Male blastomeres achieve XCU upon zygotic genome activation while females experience two distinct waves of XCU, upon imprinted- and random XCI, and ablation of Xist impedes female XCU. Contrary to widely established models of mammalian dosage compensation, naïve female embryonic cells carrying two active X chromosomes do not exhibit upregulation but express both alleles at basal level, yet collectively exceeding the RNA output of a single hyperactive allele. We show, in vivo and in vitro, that XCU is kinetically driven by X-specific modulation of transcriptional burst frequency, coinciding with increased compartmentalization of the hyperactive allele. Altogether, our data provide unprecedented insights into the dynamics of mammalian XCU, prompting a revised model of the chain in events of allelic regulation by XCU and XCI in unitedly achieving stable cellular levels of X-chromosome transcripts.
 ##
 
 ### Session info
