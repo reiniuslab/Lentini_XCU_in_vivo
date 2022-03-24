@@ -6,7 +6,7 @@
 <sup>2</sup>Department of Physiology and Pharmacology, Karolinska Institutet, Stockholm, Sweden.
 ##
 
-This repository contains scripts and additional data needed to reproduce findings described in [PAPER](), [PRE-PRINT](https://www.biorxiv.org/content/10.1101/2021.07.14.452323v1).
+This repository contains scripts and additional data needed to reproduce findings described in [PAPER](https://doi.org/10.1038/s41467-022-29414-1), [PRE-PRINT](https://www.biorxiv.org/content/10.1101/2021.07.14.452323v1).
 
 Raw and processed data is available through ArrayExpress: [[Smart-seq3]](https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-9324/), [[Joint Smart-seq3+scATAC]](https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-10714/) and [[Allelic dilution series]](https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-10709/).
 
@@ -15,22 +15,23 @@ Raw and processed data is available through ArrayExpress: [[Smart-seq3]](https:/
 ``xy_homologs.tsv`` is modified from Table1 in ([5](https://dx.doi.org/doi:10.1016/j.cell.2014.09.052)) 
 
 ## Abstract
-X-chromosome inactivation and X-upregulation are the fundamental modes of chromosome-
-wide gene regulation that collectively achieve dosage compensation in mammals, but the 
-regulatory link between the two remains elusive and the X-upregulation dynamics are unknown. 
-Here, we use allele-resolved single-cell RNA-seq combined with chromatin accessibility 
-profiling to finely dissect their separate effects on RNA levels during mouse development. 
-Surprisingly, we uncover that X-upregulation elastically tunes expression dosage in a sex- and 
-lineage-specific manner, and moreover along varying degrees of X-inactivation progression. 
-Male blastomeres achieve X-upregulation upon zygotic genome activation while females 
-experience two distinct waves of upregulation, upon imprinted and random X-inactivation; and 
-ablation of *Xist* impedes female X-upregulation. Female cells carrying two active X 
-chromosomes lack upregulation, yet their collective RNA output exceeds that of a single 
-hyperactive allele. Importantly, this conflicts the conventional dosage compensation model in 
-which naïve female cells are subject to biallelic X-upregulation followed by X-inactivation. 
-Together, our study provides key insights to the chain of events of dosage compensation, 
-explaining how transcript copy numbers can remain remarkably stable across developmental 
-windows wherein severe dose imbalance would otherwise be experienced by the cell.
+X-chromosome inactivation and X-upregulation are the fundamental modes of chromosomewide
+gene regulation that collectively achieve dosage compensation in mammals, but the
+regulatory link between the two remains elusive and the X-upregulation dynamics are
+unknown. Here, we use allele-resolved single-cell RNA-seq combined with chromatin
+accessibility profiling and finely dissect their separate effects on RNA levels during mouse
+development. Surprisingly, we uncover that X-upregulation elastically tunes expression
+dosage in a sex- and lineage-specific manner, and moreover along varying degrees of
+X-inactivation progression. Male blastomeres achieve X-upregulation upon zygotic genome
+activation while females experience two distinct waves of upregulation, upon imprinted and
+random X-inactivation; and ablation of Xist impedes female X-upregulation. Female cells
+carrying two active X chromosomes lack upregulation, yet their collective RNA output
+exceeds that of a single hyperactive allele. Importantly, this conflicts the conventional dosage
+compensation model in which naïve female cells are initially subject to biallelic
+X-upregulation followed by X-inactivation of one allele to correct the X dosage. Together, our
+study provides key insights to the chain of events of dosage compensation, explaining how
+transcript copy numbers can remain remarkably stable across developmental windows
+wherein severe dose imbalance would otherwise be experienced by the cell.
 ##
 
 ### Session info
